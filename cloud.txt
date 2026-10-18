@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://ronald-cleaning-positive-opening.trycloudflare.com
+api=

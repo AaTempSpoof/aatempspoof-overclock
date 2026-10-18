@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=
+api=https://era-pos-purchased-journalism.trycloudflare.com

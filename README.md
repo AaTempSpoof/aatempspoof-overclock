@@ -19,4 +19,6 @@
 
 `admin.html` 登录后通过内存中的 Bearer Token 访问管理 API。刷新页面会清除 Token。管理员可处理捐赠队列与注册链接重发、审批设备、分别配置微信/支付宝收款图与 SMTP，并导入导出由服务端重新签名的名单文本。
 
+本机 `http://127.0.0.1:28089/admin.html` 会直接连接 `28088` 管理 API，不显示远程凭据登录。公网管理入口仍由独立远程凭据保护。管理页还包含手机通知日志、收款通知和通知设备在线状态；“复制手机配对密钥”用于给手机端超频通知签名配对，密钥需保存到 `/data/adb/aa-overclock-payment/overclock/phone-notification.key`。
+
 静态网站仓库禁止放入数据库、运行目录、名单原件、SMTP 密码、签名私钥、管理员 Token、真实支付回调密钥或临时公网地址。公开部署前只需配置 `cloud.txt` 的 API 地址；服务端使用 `AAT_OC_ALLOWED_ORIGINS` 限定允许来源。

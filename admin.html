@@ -20,6 +20,8 @@
         <a class="admin-side-link" href="#admin-donations">捐赠名单</a>
         <a class="admin-side-link" href="#admin-blacklist">黑名单</a>
         <a class="admin-side-link" href="#admin-email">捐赠管理</a>
+        <a class="admin-side-link" href="#admin-notifications">通知日志</a>
+        <a class="admin-side-link" href="#admin-payment-notifications">收款通知</a>
       </nav>
       <div class="admin-side-foot"><i></i><span>独立服务运行中</span></div>
     </aside>
@@ -39,8 +41,8 @@
         <form class="form-card admin-login-card" data-admin-login novalidate>
           <div class="panel-label">SERVER AUTHENTICATION</div>
           <h2>登录独立超频服务</h2>
-          <p class="admin-muted">登录由独立服务端验证。Token 只在本次页面会话中提交，不写入 URL、源码或持久存储。</p>
-          <label class="field"><span>管理 Token <b>*</b></span><input name="token" type="password" autocomplete="current-password" required placeholder="输入服务端管理 Token"></label>
+          <p class="admin-muted">本机管理页会直接进入；从公网打开时才需要远程管理凭据。</p>
+          <label class="field"><span>远程管理凭据 <b>*</b></span><input name="token" type="password" autocomplete="current-password" required placeholder="仅公网管理入口需要"></label>
           <button class="button button-primary button-wide" type="submit"><span>登录管理端</span><span aria-hidden="true">→</span></button>
           <div class="form-status" data-admin-login-status role="status" aria-live="polite"></div>
         </form>
@@ -101,6 +103,16 @@
           <article class="admin-card admin-card-wide" id="admin-additional">
             <div class="admin-card-head"><div><span class="panel-label">ADDITIONAL FEATURES</span><h2>附加功能</h2></div></div>
             <div class="admin-tool-grid"><div><strong>设备授权</strong><span>主板 ID、机型、SoC、内核和驱动由服务端签名校验。</span></div><div><strong>授权清单</strong><span>当前清单和模块公钥使用独立超频密钥，不与 AaTempSpoof 共用。</span></div><div><strong>服务健康</strong><span>API、邮件和收款配置状态会显示在配置卡片中。</span></div></div>
+          </article>
+          <article class="admin-card admin-card-wide" id="admin-notifications">
+            <div class="admin-card-head"><div><span class="panel-label">PHONE NOTIFICATIONS</span><h2>手机通知日志</h2></div><div class="admin-card-actions"><button class="button button-secondary button-small" type="button" data-phone-pair>复制手机配对密钥</button><button class="icon-button" type="button" data-admin-refresh="notifications" title="刷新手机通知日志" aria-label="刷新手机通知日志">↻</button></div></div>
+            <div class="notification-presence" data-notification-presence>通知设备状态读取中</div>
+            <p class="admin-muted">配对密钥只用于手机到独立超频服务的收款通知签名。</p>
+            <div class="admin-list notification-list" data-notification-list><div class="empty-state">登录后读取手机通知</div></div>
+          </article>
+          <article class="admin-card admin-card-wide" id="admin-payment-notifications">
+            <div class="admin-card-head"><div><span class="panel-label">PAYMENT NOTIFICATIONS</span><h2>收款通知</h2></div><button class="icon-button" type="button" data-admin-refresh="payments" title="刷新收款通知" aria-label="刷新收款通知">↻</button></div>
+            <div class="admin-list notification-list" data-payment-notification-list><div class="empty-state">登录后读取收款通知</div></div>
           </article>
         </div>
         <div class="form-status" data-admin-action-status role="status" aria-live="polite"></div>

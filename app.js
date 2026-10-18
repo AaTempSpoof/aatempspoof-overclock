@@ -46,9 +46,8 @@
     if (!response.ok) throw new Error('cloud.txt 不可用');
     const lines = (await response.text()).split(/\r?\n/);
     const value = lines.map(line => line.trim()).find(line => line.toLowerCase().startsWith('api='));
-    let api = value ? value.slice(4).trim() : '';
     const localPreview = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-    if (!api && localPreview) api = 'http://127.0.0.1:28088';
+    let api = localPreview ? 'http://127.0.0.1:28088' : (value ? value.slice(4).trim() : '');
     if (!api || !/^https:\/\//i.test(api) && !(localPreview && /^http:\/\//i.test(api))) throw new Error('服务端入口尚未配置');
     state.api = api;
     setCloudState('服务入口已连接', false);
@@ -283,6 +282,24 @@
     ];
     entries.forEach(([label, value, yes, no]) => { const row = document.createElement('div'); row.className = 'config-row'; const name = document.createElement('span'); name.textContent = label; const status = document.createElement('strong'); status.textContent = value === true || value === 'true' || value === 'configured' ? yes : no; status.className = status.textContent === yes || status.textContent === '正常' ? 'is-ok' : 'is-muted'; row.append(name, status); node.appendChild(row); });
   }
+  function renderNotificationList(node, items, payments) {
+    if (!node) return;
+    node.textContent = '';
+    if (!Array.isArray(items) || !items.length) {
+      const empty = document.createElement('div'); empty.className = 'empty-state'; empty.textContent = payments ? '当前没有识别到收款通知' : '当前没有手机通知'; node.appendChild(empty); return;
+    }
+    items.slice(0, 30).forEach(item => {
+      const row = document.createElement('div'); row.className = 'admin-list-row notification-row';
+      const main = document.createElement('div');
+      const title = document.createElement('strong'); title.textContent = safeText(item.title || item.package_name, '未命名');
+      const content = document.createElement('span'); content.textContent = safeText(item.content || item.ticker, '无正文');
+      main.append(title, content);
+      const meta = document.createElement('small');
+      const amount = Number(item.amount_cents || 0) > 0 ? ' · ¥' + (Number(item.amount_cents) / 100).toFixed(2) : '';
+      meta.textContent = safeText(item.payment_status || item.package_name, '通知') + amount;
+      row.append(main, meta); node.appendChild(row);
+    });
+  }
   async function adminRequest(path, options) {
     const requestOptions = Object.assign({ referrerPolicy: 'no-referrer' }, options || {});
     requestOptions.headers = Object.assign({}, requestOptions.headers || {});
@@ -290,7 +307,7 @@
     return request(path, requestOptions);
   }
   async function loadAdminData(kind, statusNode) {
-    const paths = { queue: '/admin/queue', review: '/admin/review', policy: '/admin/policy', config: '/admin/config/status' };
+    const paths = { queue: '/admin/queue', review: '/admin/review', policy: '/admin/policy', config: '/admin/config/status', notifications: '/admin/phone-notifications', payments: '/admin/payment-notifications' };
     try {
       const data = await adminRequest(paths[kind], { method: 'GET' });
       if (kind === 'queue') { $('[data-queue-count]').textContent = text(data.pendingCount != null ? data.pendingCount : (data.items || []).length, '0'); renderAdminList($('[data-queue-list]'), data.items || data.queue, 'queue'); }
@@ -318,6 +335,12 @@
           smtpForm.elements.password.required = !data.smtp;
         }
       }
+      if (kind === 'notifications') {
+        renderNotificationList($('[data-notification-list]'), data.items, false);
+        const presence = data.presence || {};
+        $('[data-notification-presence]').textContent = presence.online ? '通知设备在线 · 最近心跳 ' + new Date(Number(presence.lastSeen || 0)).toLocaleString() : '通知设备暂未在线';
+      }
+      if (kind === 'payments') renderNotificationList($('[data-payment-notification-list]'), data.items, true);
     } catch (error) { setStatus(statusNode, error.message || '读取管理数据失败。', 'error'); }
   }
   async function initAdmin() {
@@ -328,6 +351,17 @@
     const loginStatus = $('[data-admin-login-status]');
     const actionStatus = $('[data-admin-action-status]');
     try { await loadCloud(); } catch (error) { setCloudState('服务暂不可用', true); setStatus(loginStatus, error.message || '服务端入口未配置。', 'error'); return; }
+    const localDirect = /^https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/i.test(state.api);
+    if (localDirect) {
+      loginPanel.hidden = true;
+      dashboard.hidden = false;
+      const localSession = $('[data-admin-session-label]');
+      if (localSession) localSession.textContent = '本机直连';
+      const logoutButton = $('[data-admin-logout]');
+      if (logoutButton) logoutButton.hidden = true;
+      setStatus(actionStatus, '本机云端管理已直接连接。', 'ok');
+      await Promise.all(['queue', 'review', 'policy', 'config', 'notifications', 'payments'].map(kind => loadAdminData(kind, actionStatus)));
+    }
     const policyActions = $$('[data-policy-action]');
     const donationConfigForm = $('[data-donation-config-form]');
     const smtpConfigForm = $('[data-smtp-config-form]');
@@ -335,14 +369,25 @@
     const policyFileSelect = $('[data-policy-file-name]');
     const policyFileInput = $('[data-policy-file]');
     const policyDownload = $('[data-policy-download]');
+    const phonePairButton = $('[data-phone-pair]');
+    phonePairButton?.addEventListener('click', async () => {
+      setButtonBusy(phonePairButton, true, '读取中', '复制手机配对密钥');
+      try {
+        const data = await adminRequest('/admin/phone-token', { method: 'GET' });
+        if (!data.token || !navigator.clipboard?.writeText) throw new Error('当前浏览器无法写入剪贴板。');
+        await navigator.clipboard.writeText(data.token);
+        setStatus(actionStatus, '手机配对密钥已复制，请保存到手机独立超频通知目录。', 'ok');
+      } catch (error) { setStatus(actionStatus, error.message || '读取手机配对密钥失败。', 'error'); }
+      finally { setButtonBusy(phonePairButton, false, '读取中', '复制手机配对密钥'); }
+    });
     loginForm.addEventListener('submit', async event => {
       event.preventDefault(); if (!loginForm.checkValidity()) { loginForm.reportValidity(); return; }
-      const button = $('button[type="submit"]', loginForm); setButtonBusy(button, true, '登录中', '登录管理端'); setStatus(loginStatus, '正在验证管理 Token……', 'loading');
+      const button = $('button[type="submit"]', loginForm); setButtonBusy(button, true, '登录中', '登录管理端'); setStatus(loginStatus, '正在验证远程管理凭据……', 'loading');
       try {
         const body = formBody(loginForm);
         await adminRequest('/admin/login', jsonOptions(body)); state.adminToken = body.token;
         loginForm.reset(); loginPanel.hidden = true; dashboard.hidden = false; setStatus(loginStatus, '', '');
-        await Promise.all(['queue', 'review', 'policy', 'config'].map(kind => loadAdminData(kind, actionStatus)));
+        await Promise.all(['queue', 'review', 'policy', 'config', 'notifications', 'payments'].map(kind => loadAdminData(kind, actionStatus)));
       }
       catch (error) { setStatus(loginStatus, error.message || '管理登录失败。', 'error'); }
       finally { setButtonBusy(button, false, '登录中', '登录管理端'); }

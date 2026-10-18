@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://coding-artificial-specific-welcome.trycloudflare.com
+api=

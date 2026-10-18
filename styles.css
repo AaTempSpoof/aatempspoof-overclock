@@ -173,6 +173,46 @@ main { padding: 70px 0 62px; }
 .policy-file-actions, .row-actions { display: flex; align-items: center; gap: 13px; }
 .admin-list-row > div:first-child { min-width: 0; }
 
+.sponsor-page { width: min(100% - 32px, 720px); margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 0 max(32px, env(safe-area-inset-bottom)); color: #18221d; font-family: "Noto Sans SC", "Segoe UI", system-ui, sans-serif; }
+.sponsor-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.sponsor-mark { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid #0a6e45; border-radius: 7px; background: #087a4a; color: #fff; font: 700 18px/1 Consolas, monospace; }
+.sponsor-name { font-size: 18px; font-weight: 750; }
+.sponsor-label { margin-top: 2px; color: #66736c; font-size: 13px; }
+.sponsor-surface { overflow: hidden; border: 1px solid #dce5df; border-radius: 8px; background: #fff; box-shadow: 0 12px 38px rgba(28, 52, 40, .08); }
+.sponsor-intro, .sponsor-stage { padding: 30px; }
+.sponsor-stage { border-top: 1px solid #dce5df; }
+.sponsor-stage[hidden], .sponsor-payment-content[hidden], .sponsor-queue-action[hidden], .sponsor-modal[hidden] { display: none; }
+.sponsor-eyebrow { margin: 0 0 10px; color: #087a4a; font-size: 13px; font-weight: 750; }
+.sponsor-intro h1 { margin: 0; font-size: 34px; line-height: 1.2; }
+.sponsor-lead { max-width: 560px; margin: 14px 0 0; color: #66736c; font-size: 16px; line-height: 1.75; }
+.sponsor-threshold { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 24px; padding: 17px 18px; border-left: 4px solid #c88716; background: #fff6df; }
+.sponsor-threshold span { color: #785410; font-size: 14px; }
+.sponsor-threshold strong { color: #5b3d08; font-size: 20px; }
+.sponsor-stage h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.35; }
+.sponsor-stage-copy { margin: 0 0 22px; color: #66736c; font-size: 14px; line-height: 1.7; }
+.sponsor-stage label:not(.sponsor-confirm) { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+.sponsor-stage input[type=email] { width: 100%; height: 48px; padding: 0 13px; border: 1px solid #b8c8bf; border-radius: 6px; outline: none; color: #18221d; background: #fff; }
+.sponsor-stage input[type=email]:focus { border-color: #087a4a; box-shadow: 0 0 0 3px rgba(8, 122, 74, .13); }
+.sponsor-field-note { margin: 8px 0 0; color: #b43c35; font-size: 13px; line-height: 1.55; }
+.sponsor-confirm { display: flex; align-items: flex-start; gap: 10px; margin: 20px 0; color: #3f4d46; font-size: 14px; font-weight: 500; line-height: 1.55; cursor: pointer; }
+.sponsor-confirm input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: #087a4a; }
+.sponsor-primary { width: 100%; min-height: 48px; border: 0; border-radius: 6px; background: #087a4a; color: #fff; font-weight: 750; cursor: pointer; }
+.sponsor-primary:hover { background: #075f3b; }
+.sponsor-primary:disabled { cursor: wait; opacity: .66; }
+.sponsor-message { min-height: 22px; margin: 12px 0 0; color: #b43c35; font-size: 13px; text-align: center; }
+.sponsor-payment-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+.sponsor-status { flex: 0 0 auto; padding: 5px 8px; border: 1px solid #9ccbb4; border-radius: 5px; background: #edf8f2; color: #075f3b; font-size: 12px; font-weight: 750; }
+.sponsor-queue-box { margin-bottom: 22px; padding: 18px; border: 1px solid #dce5df; background: #f8faf9; }
+.sponsor-queue-position { color: #18221d; font-size: 22px; font-weight: 800; line-height: 1.3; }
+.sponsor-queue-message { margin: 7px 0 0; color: #66736c; font-size: 14px; line-height: 1.65; }
+.sponsor-queue-action { margin-top: 16px; }
+.sponsor-amount-band { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px; margin-bottom: 24px; padding: 18px; border: 1px solid #e5c77d; background: #fff6df; }
+.sponsor-amount-label { color: #785410; font-size: 13px; }.sponsor-amount-help { margin-top: 5px; color: #705b2d; font-size: 13px; }.sponsor-amount-value { color: #4f3508; font: 800 30px/1 Consolas, monospace; }
+.sponsor-payment-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 18px; }.sponsor-payment-method { min-width: 0; }.sponsor-payment-method-head { min-height: 64px; margin-bottom: 10px; text-align: center; }.sponsor-payment-method-head h3 { margin: 0; font-size: 17px; }.sponsor-payment-method-head p { margin: 4px 0 0; color: #66736c; font-size: 12px; }.sponsor-qr-wrap { width: min(100%, 300px); margin: 0 auto; }.sponsor-qr-wrap img { display: block; width: 100%; height: auto; border: 1px solid #dce5df; }.sponsor-payment-unavailable { padding: 28px 10px; border: 1px dashed #b8c8bf; color: #66736c; font-size: 13px; text-align: center; }
+.sponsor-steps { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: step; }.sponsor-steps li { position: relative; padding-left: 34px; color: #46534c; font-size: 14px; line-height: 1.6; counter-increment: step; }.sponsor-steps li::before { content: counter(step); position: absolute; left: 0; top: 1px; display: grid; width: 23px; height: 23px; place-items: center; border: 1px solid #9fb1a7; border-radius: 50%; color: #075f3b; font: 700 12px/1 Consolas, monospace; }
+.sponsor-timer { margin: 18px 0 0; color: #66736c; font-size: 13px; text-align: center; }.sponsor-success { margin-top: 22px; padding: 16px 18px; border-left: 4px solid #087a4a; background: #edf8f2; color: #28533e; font-size: 14px; line-height: 1.65; }.sponsor-secondary { display: block; margin: 18px auto 0; border: 0; background: transparent; color: #075f3b; font-size: 13px; text-decoration: underline; cursor: pointer; }.sponsor-footer { display: flex; justify-content: space-between; gap: 12px; padding: 18px 4px 0; color: #7a8780; font-size: 12px; }.sponsor-footer a { color: #075f3b; }
+.sponsor-announcement-trigger { position: fixed; top: max(12px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); z-index: 25; min-height: 36px; padding: 7px 12px; border: 1px solid #9ccbb4; border-radius: 999px; background: rgba(255,255,255,.94); color: #075f3b; font-size: 12px; font-weight: 750; box-shadow: 0 8px 22px rgba(28,52,40,.12); cursor: pointer; }.sponsor-modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 24px; background: rgba(24,34,29,.48); }.sponsor-dialog { width: min(100%, 520px); max-height: min(78vh,620px); overflow: auto; border: 1px solid #c6d8ce; border-radius: 12px; background: #fff; box-shadow: 0 24px 70px rgba(18,35,27,.22); }.sponsor-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 22px 14px; border-bottom: 1px solid #dce5df; }.sponsor-dialog h2 { margin: 0; font-size: 22px; }.sponsor-dismiss { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid #dce5df; border-radius: 50%; background: #fff; color: #66736c; font-size: 21px; cursor: pointer; }.sponsor-dialog-body { padding: 20px 22px 22px; color: #3f4d46; font-size: 15px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }.sponsor-dialog .sponsor-primary { width: calc(100% - 44px); margin: 0 22px 22px; }
+
 @media (max-width: 800px) {
   .site-shell { padding: 0 20px; }
   .home-intro { padding-bottom: 50px; }
@@ -204,6 +244,19 @@ main { padding: 70px 0 62px; }
   .input-with-action input { flex: 1 1 180px; }
   .code-hint { width: 100%; }
   .payment-card { padding: 22px 18px; }
+  .sponsor-page { width: min(100% - 20px, 720px); padding-top: 18px; }
+  .sponsor-intro, .sponsor-stage { padding-left: 20px; padding-right: 20px; }
+  .sponsor-intro { padding-top: 24px; }
+  .sponsor-intro h1 { font-size: 28px; }
+  .sponsor-threshold { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .sponsor-payment-head { gap: 10px; }
+  .sponsor-amount-band { grid-template-columns: 1fr; }
+  .sponsor-amount-value { font-size: 28px; }
+  .sponsor-payment-methods { gap: 10px; }
+  .sponsor-payment-method-head { min-height: 58px; margin-bottom: 8px; }
+  .sponsor-payment-method-head h3 { font-size: 15px; }
+  .sponsor-payment-method-head p { font-size: 11px; }
+  .sponsor-footer { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }

@@ -155,61 +155,86 @@
   async function initDonate() {
     const form = $('[data-donate-form]');
     if (!form) return;
-    const status = $('[data-donate-status]');
-    const paymentPanel = $('[data-payment-panel]');
-    const amount = $('[data-amount]');
-    const announcement = $('[data-announcement]');
-    const imageWrap = $('[data-payment-image-wrap]');
-    const image = $('[data-payment-image]');
-    const unavailable = $('[data-payment-unavailable]');
-    const orderResult = $('[data-order-result]');
-    const orderTitle = $('[data-order-title]');
-    const orderCopy = $('[data-order-copy]');
-    let pollTimer = null;
+    const status = $('[data-donate-status]'), stage = $('[data-order-result]'), stateLabel = $('[data-payment-state]');
+    const queueStatus = $('[data-queue-status]'), queuePosition = $('[data-queue-position]'), queueMessage = $('[data-queue-message]');
+    const beginButton = $('[data-begin-payment]'), requeueButton = $('[data-requeue]'), paymentContent = $('[data-payment-content]');
+    const timer = $('[data-donate-timer]'), success = $('[data-donate-success]'), restart = $('[data-donate-restart]');
+    const emailSummary = $('[data-email-summary]'), amount = $('[data-amount]'), amountHelp = $('[data-amount-help]');
+    const announcementTrigger = $('[data-announcement-trigger]'), announcementModal = $('[data-announcement-modal]');
+    const announcementBody = $('[data-announcement-body]');
+    let pollTimer = null, countdownTimer = null, orderId = '', statusToken = '', deadlineAt = 0, serverOffset = 0, queueState = '';
+    const storageKey = 'aaOverclockDonationIntent';
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch (_) { saved = null; }
+    function saveIntent() { try { localStorage.setItem(storageKey, JSON.stringify({ orderId, statusToken })); } catch (_) {} }
+    function clearIntent() { try { localStorage.removeItem(storageKey); } catch (_) {} }
+    function formatDuration(seconds) { const value = Math.max(0, Math.ceil(Number(seconds) || 0)); return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0'); }
+    function updateCountdown() {
+      const remaining = Math.max(0, (deadlineAt - (Date.now() + serverOffset)) / 1000);
+      if (queueState === 'waiting') timer.textContent = '正在排队，请保持本页打开';
+      else if (queueState === 'ready') timer.textContent = '确认剩余：' + formatDuration(remaining);
+      else if (queueState === 'paying') timer.textContent = '付款剩余：' + formatDuration(remaining);
+      else if (queueState === 'confirming') timer.textContent = '到账确认中';
+      else if (queueState === 'timed_out') timer.textContent = '本轮预约已超时';
+      else if (queueState === 'paid') timer.textContent = '赞助处理完成';
+      else timer.textContent = '正在同步状态';
+    }
+    function showPaymentImage(selector, emptySelector, value) {
+      const url = validImageUrl(value), wrap = $(selector), empty = $(emptySelector), image = $('img', wrap);
+      if (url) { image.src = url; wrap.hidden = false; empty.hidden = true; } else { wrap.hidden = true; empty.hidden = false; }
+    }
+    function applyConfig(data) {
+      const configured = data.available === true && data.enabled !== false;
+      stateLabel.textContent = configured ? '已配置' : '未配置';
+      const submit = $('button[type="submit"]', form); submit.disabled = !configured;
+      amount.textContent = data.amount ? '¥' + data.amount : '--';
+      amountHelp.textContent = configured ? '请在付款时段内完成页面显示的金额。' : '捐赠、收款码或邮件发送尚未配置。';
+      showPaymentImage('[data-wechat-wrap]', '[data-wechat-empty]', data.wechatPayment || data.paymentImage);
+      showPaymentImage('[data-alipay-wrap]', '[data-alipay-empty]', data.alipayPayment);
+      if (data.announcement && data.announcementEnabled !== false) {
+        announcementBody.textContent = data.announcement; announcementTrigger.hidden = false;
+      }
+      return configured;
+    }
+    function applyStatus(data) {
+      queueState = data.queueState || (data.status === 'paid' ? 'paid' : 'ready'); deadlineAt = Number(data.deadlineAt || 0); serverOffset = Number(data.serverNow || Date.now()) - Date.now();
+      stage.hidden = false; form.hidden = true; emailSummary.textContent = '注册链接将发送至 ' + (data.emailMasked || '已登记邮箱'); queueStatus.textContent = queueState === 'ready' ? '轮到您了' : queueState === 'paying' ? '等待付款' : queueState === 'confirming' ? '确认到账' : queueState === 'paid' ? '邮件处理中' : queueState === 'timed_out' ? '已超时' : '排队中';
+      queuePosition.textContent = queueState === 'ready' ? '现在可以开始付款' : queueState === 'paying' ? '付款时段已为您锁定' : queueState === 'paid' ? '付款已确认' : queueState === 'timed_out' ? '本轮预约已经结束' : '正在同步预约状态';
+      queueMessage.textContent = queueState === 'ready' ? '点击“开始付款”后才会显示收款码。' : queueState === 'paying' ? '请在倒计时结束前完成付款。' : queueState === 'confirming' ? '收款码已隐藏，系统正在确认到账。' : queueState === 'paid' ? (data.emailStatus === 'sent' ? '注册链接已发送，请检查收件箱和垃圾邮件目录。' : '付款已确认，邮件正在发送。') : queueState === 'timed_out' ? '本轮预约已结束，可以重新排队。' : '请保持本页打开。';
+      beginButton.hidden = queueState !== 'ready'; requeueButton.hidden = queueState !== 'timed_out'; paymentContent.hidden = queueState !== 'paying'; success.hidden = !(queueState === 'paid' && data.emailStatus === 'sent'); restart.hidden = queueState === 'paid' && data.emailStatus === 'sent'; updateCountdown();
+      if (queueState === 'paid' && data.emailStatus === 'sent') { clearTimeout(pollTimer); clearInterval(countdownTimer); } else if (!countdownTimer) countdownTimer = setInterval(updateCountdown, 1000);
+    }
+    async function poll() {
+      if (!orderId || !statusToken) return;
+      try { const data = await request('/donate/status', jsonOptions({ orderId, statusToken })); applyStatus(data); } catch (error) { if (/order_not_found|HTTP 404/.test(error.message)) { clearIntent(); form.hidden = false; stage.hidden = true; setStatus(status, '订单不存在，请重新填写邮箱。', 'error'); return; } }
+      if (orderId && !(queueState === 'paid' && !success.hidden)) { clearTimeout(pollTimer); pollTimer = setTimeout(poll, 2000); }
+    }
+    async function changeReservation(path, button) { button.disabled = true; try { const data = await request(path, jsonOptions({ orderId, statusToken })); applyStatus(data); } catch (error) { queueMessage.textContent = error.message || '操作失败，请稍后重试。'; } finally { button.disabled = false; } }
     try {
       await loadCloud();
       const data = await request('/donate/config', { method: 'GET' });
       state.config = data;
-      const configured = data.available === true && data.enabled !== false;
-      paymentPanel.classList.toggle('is-unavailable', !configured);
-      const orderButton = $('button[type="submit"]', form);
-      orderButton.disabled = !configured;
-      $('[data-payment-state]').textContent = configured ? '已配置' : '未配置';
-      amount.textContent = configured && data.amount ? (String(data.amount).includes('¥') ? data.amount : '¥' + data.amount) : '--';
-      announcement.textContent = data.announcement || (configured ? '请按页面提示完成付款。' : '服务端尚未配置订单信息。');
-      const imageUrl = validImageUrl(data.paymentImage || data.paymentImageUrl || '');
-      if (configured && imageUrl) { image.src = imageUrl; imageWrap.hidden = false; unavailable.hidden = true; } else { imageWrap.hidden = true; unavailable.hidden = false; }
-      setStatus(status, configured ? '订单服务已就绪。' : '捐赠、收款图或邮件发送尚未配置。', configured ? 'ok' : 'error');
+      const configured = applyConfig(data); setStatus(status, configured ? '订单服务已就绪。' : '捐赠、收款码或邮件发送尚未配置。', configured ? 'ok' : 'error');
     } catch (error) {
-      paymentPanel.classList.add('is-unavailable'); $('[data-payment-state]').textContent = '未连接'; unavailable.hidden = false; setCloudState('服务暂不可用', true); setStatus(status, error.message || '无法读取订单配置。', 'error'); return;
+      stateLabel.textContent = '未连接'; setCloudState('服务暂不可用', true); setStatus(status, error.message || '无法读取订单配置。', 'error'); return;
     }
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      const button = $('button[type="submit"]', form); setButtonBusy(button, true, '创建中', '创建订单'); setStatus(status, '正在创建订单……', 'loading');
+      const button = $('button[type="submit"]', form); setButtonBusy(button, true, '登记中', '确认邮箱并进入排队'); setStatus(status, '正在登记邮箱……', 'loading');
       try {
         const data = await request('/donate/start', jsonOptions(formBody(form)));
-        const orderId = data.orderId || data.id || data.order_id;
-        if (!orderId) throw new Error('服务器未返回订单编号');
-        orderResult.hidden = false; orderTitle.textContent = '等待付款'; orderCopy.textContent = '订单 ' + orderId + ' 已创建。付款确认后，注册链接会自动发送到填写的邮箱。'; setStatus(status, '订单已创建，请按页面收款信息完成付款。', 'ok');
-        const statusToken = data.statusToken || '';
-        clearInterval(pollTimer);
-        const poll = async () => {
-          try {
-            const current = await request('/donate/status', jsonOptions({ orderId: String(orderId), statusToken }));
-            const currentStatus = String(current.status || current.state || '').toLowerCase();
-            if (currentStatus === 'paid' && current.emailStatus === 'sent') {
-              orderTitle.textContent = '注册链接已发送'; orderCopy.textContent = '付款已确认，注册链接已发送到订单邮箱。请在 7 天内打开邮件中的链接完成登记。';
-              clearInterval(pollTimer);
-            } else if (currentStatus === 'paid' && current.emailStatus === 'failed') {
-              orderTitle.textContent = '等待邮件重试'; orderCopy.textContent = '付款已确认，邮件发送遇到问题。管理员会从队列中重发注册链接。';
-            } else if (currentStatus === 'cancelled' || currentStatus === 'expired' || currentStatus === 'failed') { orderTitle.textContent = '订单已结束'; orderCopy.textContent = current.message || '请重新创建订单。'; clearInterval(pollTimer); }
-          } catch (_) { /* 下一轮继续，避免短暂网络波动打断订单 */ }
-        };
-        pollTimer = setInterval(poll, 5000); await poll();
+        orderId = data.orderId; statusToken = data.statusToken; saveIntent(); applyStatus(data); setStatus(status, '邮箱已登记，请按页面提示完成付款。', 'ok'); poll();
       } catch (error) { setStatus(status, error.message || '订单创建失败。', 'error'); }
-      finally { setButtonBusy(button, false, '创建中', '创建订单'); }
+      finally { setButtonBusy(button, false, '登记中', '确认邮箱并进入排队'); }
     });
+    beginButton.addEventListener('click', () => changeReservation('/donate/begin', beginButton));
+    requeueButton.addEventListener('click', () => changeReservation('/donate/requeue', requeueButton));
+    restart.addEventListener('click', () => { clearIntent(); clearTimeout(pollTimer); clearInterval(countdownTimer); window.location.reload(); });
+    announcementTrigger.addEventListener('click', () => { announcementModal.hidden = false; $('[data-announcement-close]').focus(); });
+    $('[data-announcement-dismiss]').addEventListener('click', () => { announcementModal.hidden = true; });
+    $('[data-announcement-close]').addEventListener('click', () => { announcementModal.hidden = true; });
+    if (saved && saved.orderId && saved.statusToken) { orderId = saved.orderId; statusToken = saved.statusToken; poll(); }
   }
 
   function safeText(value, fallback = '未提供') {
@@ -277,9 +302,11 @@
         const smtpForm = $('[data-smtp-config-form]');
         if (donationForm) {
           donationForm.elements.amount.value = data.amount || '';
-          donationForm.elements.payment_image.value = data.paymentImage || '';
+          donationForm.elements.wechat_payment.value = data.wechatPayment || data.paymentImage || '';
+          donationForm.elements.alipay_payment.value = data.alipayPayment || '';
           donationForm.elements.announcement.value = data.announcement || '';
           donationForm.elements.enabled.checked = !!data.donationEnabled;
+          donationForm.elements.announcement_enabled.checked = data.announcementEnabled !== false;
           donationForm.elements.email_otp_enabled.checked = data.otpEnabled !== false;
         }
         if (smtpForm) {
@@ -338,7 +365,7 @@
     });
     if (donationConfigForm) donationConfigForm.addEventListener('submit', async event => {
       event.preventDefault(); if (!donationConfigForm.checkValidity()) { donationConfigForm.reportValidity(); return; }
-      const data = formBody(donationConfigForm); data.amount_cents = Math.round(Number(data.amount) * 100); data.enabled = data.enabled === 'on'; data.email_otp_enabled = data.email_otp_enabled === 'on'; delete data.amount;
+      const data = formBody(donationConfigForm); data.amount_cents = Math.round(Number(data.amount) * 100); data.enabled = data.enabled === 'on'; data.announcement_enabled = data.announcement_enabled === 'on'; data.email_otp_enabled = data.email_otp_enabled === 'on'; delete data.amount;
       try { await adminRequest('/admin/config/donation', jsonOptions(data)); setStatus(actionStatus, '捐赠设置已保存。', 'ok'); await loadAdminData('config', actionStatus); }
       catch (error) { setStatus(actionStatus, error.message || '捐赠设置保存失败。', 'error'); }
     });

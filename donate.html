@@ -2,50 +2,29 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101820">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f6f4">
   <meta name="referrer" content="no-referrer">
-  <title>创建订单 · 超频侧载</title>
+  <title>统一超频赞助</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="donate">
-  <div class="site-shell compact-shell">
-    <header class="topbar">
-      <a class="wordmark" href="index.html" aria-label="超频侧载首页"><span class="wordmark-mark" aria-hidden="true">OC</span><span>超频侧载</span></a>
-      <a class="topbar-link" href="register.html">已有注册链接 <span aria-hidden="true">→</span></a>
-    </header>
-
-    <main class="flow-main">
-      <div class="flow-heading">
-        <div class="eyebrow">DONATION ORDER / 03</div>
-        <h1>创建订单</h1>
-        <p>确认到账后，服务器会自动把一次性注册链接发送到订单邮箱。</p>
-      </div>
-
-      <section class="donate-layout">
-        <form class="form-card" data-donate-form novalidate>
-          <div class="field-row"><label class="field"><span>QQ 号 <b>*</b></span><input name="qq" inputmode="numeric" maxlength="32" required placeholder="用于联系你"></label><label class="field"><span>QQ 昵称 <b>*</b></span><input name="nickname" maxlength="60" required placeholder="你的昵称"></label></div>
-          <label class="field"><span>接收注册链接的邮箱 <b>*</b></span><input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"></label>
-          <button class="button button-primary button-wide" type="submit"><span data-order-label>创建订单</span><span aria-hidden="true">→</span></button>
-          <div class="form-status" data-donate-status role="status" aria-live="polite"></div>
-        </form>
-
-        <aside class="payment-card" data-payment-panel>
-          <div class="payment-meta"><span class="panel-label">CURRENT CONFIG</span><span class="payment-state" data-payment-state>读取中</span></div>
-          <div class="amount-line"><span>建议金额</span><strong data-amount>--</strong></div>
-          <p class="announcement" data-announcement>正在读取服务端公告</p>
-          <div class="payment-image-wrap" data-payment-image-wrap hidden><img data-payment-image alt="服务端收款图像"></div>
-          <div class="payment-unavailable" data-payment-unavailable>服务暂不可用</div>
-          <div class="order-result" data-order-result hidden>
-            <div class="order-result-head"><span class="panel-label">ORDER STATUS</span><span class="live-pill"><i></i>自动刷新</span></div>
-            <strong data-order-title>等待付款</strong>
-            <p data-order-copy>付款确认后，注册链接会自动发送到订单邮箱。</p>
-          </div>
-        </aside>
+  <main class="sponsor-page">
+    <header class="sponsor-brand"><a class="sponsor-mark" href="index.html" aria-label="返回超频侧载首页">OC</a><div><div class="sponsor-name">统一超频</div><div class="sponsor-label">独立设备授权服务</div></div></header>
+    <section class="sponsor-surface">
+      <div class="sponsor-intro"><p class="sponsor-eyebrow">支持持续维护</p><h1>获取设备注册链接</h1><p class="sponsor-lead">完成付款确认后，一次性注册链接会发送到你填写的邮箱。链接绑定订单，只能成功提交一次。</p><div class="sponsor-threshold"><span>服务状态</span><strong data-payment-state>读取中</strong></div></div>
+      <form class="sponsor-stage" data-donate-form novalidate><h2>填写接收邮箱</h2><p class="sponsor-stage-copy">邮箱只用于接收一次性注册链接。填写错误将无法收到授权邮件。</p><label for="donateEmail">邮箱地址</label><input id="donateEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com" required><p class="sponsor-field-note">提交后本次订单不能更换邮箱。</p><label class="sponsor-confirm"><input name="confirmed" type="checkbox" required><span>我已确认邮箱填写正确，并了解付款完成后需要前往该邮箱查看注册链接。</span></label><button class="sponsor-primary" type="submit"><span data-order-label>确认邮箱并进入排队</span></button><p class="sponsor-message" data-donate-status role="alert"></p></form>
+      <section class="sponsor-stage sponsor-payment-stage" data-order-result hidden>
+        <div class="sponsor-payment-head"><div><h2>赞助预约</h2><p class="sponsor-stage-copy" data-email-summary></p></div><span class="sponsor-status" data-queue-status>排队中</span></div>
+        <div class="sponsor-queue-box"><div class="sponsor-queue-position" data-queue-position>正在读取排队状态</div><p class="sponsor-queue-message" data-queue-message>请保持本页打开。</p><button class="sponsor-primary sponsor-queue-action" data-begin-payment type="button" hidden>开始付款</button><button class="sponsor-primary sponsor-queue-action" data-requeue type="button" hidden>重新排队</button></div>
+        <div class="sponsor-payment-content" data-payment-content hidden><div class="sponsor-amount-band"><div><div class="sponsor-amount-label">本次捐赠金额</div><div class="sponsor-amount-help" data-amount-help>按页面配置完成付款。</div></div><div class="sponsor-amount-value" data-amount>--</div></div><div class="sponsor-payment-methods"><section class="sponsor-payment-method"><div class="sponsor-payment-method-head"><h3>微信支付</h3><p>使用微信扫一扫</p></div><div class="sponsor-qr-wrap" data-wechat-wrap hidden><img data-wechat-image alt="微信收款码"></div><div class="sponsor-payment-unavailable" data-wechat-empty hidden>微信收款码未配置</div></section><section class="sponsor-payment-method"><div class="sponsor-payment-method-head"><h3>支付宝</h3><p>打开支付宝扫一扫</p></div><div class="sponsor-qr-wrap" data-alipay-wrap hidden><img data-alipay-image alt="支付宝收款码"></div><div class="sponsor-payment-unavailable" data-alipay-empty hidden>支付宝收款码未配置</div></section></div><ol class="sponsor-steps"><li>任选一种方式，扫描对应收款码。</li><li>完成页面显示的金额付款。</li><li>付款倒计时结束前保持本页打开。</li><li>系统确认后会自动把注册链接发送到订单邮箱。</li></ol></div>
+        <p class="sponsor-timer" data-donate-timer>正在同步倒计时...</p><div class="sponsor-success" data-donate-success hidden>付款已确认，一次性注册链接已发送。请前往邮箱查看。</div><button class="sponsor-secondary" data-donate-restart type="button" hidden>返回填写邮箱</button>
       </section>
-    </main>
-    <footer class="footer"><a href="index.html">返回首页</a><span>金额与收款信息以服务端配置为准</span></footer>
-  </div>
+    </section>
+    <footer class="sponsor-footer"><a href="index.html">返回超频侧载</a><span>一次性注册链接仅供本人使用，请勿转发。</span></footer>
+  </main>
+  <button class="sponsor-announcement-trigger" data-announcement-trigger type="button" hidden>查看公告</button>
+  <div class="sponsor-modal" data-announcement-modal hidden><section class="sponsor-dialog" role="dialog" aria-modal="true" aria-labelledby="announcementTitle"><div class="sponsor-dialog-head"><div><p class="sponsor-eyebrow">服务公告</p><h2 id="announcementTitle">请先阅读公告</h2></div><button class="sponsor-dismiss" data-announcement-dismiss type="button" aria-label="关闭公告">×</button></div><div class="sponsor-dialog-body" data-announcement-body></div><button class="sponsor-primary" data-announcement-close type="button">我已阅读</button></section></div>
   <script src="app.js" defer></script>
 </body>
 </html>

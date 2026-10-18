@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=
+api=https://binding-method-curve-docs.trycloudflare.com

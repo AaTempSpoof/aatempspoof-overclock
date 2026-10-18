@@ -1,3 +1,2 @@
-# Deployment writes the active API origin on this line.
-# Example: api=https://your-authorized-api.example
-api=
+# Independent overclock API origin.
+api=https://bids-decor-neither-beaches.trycloudflare.com

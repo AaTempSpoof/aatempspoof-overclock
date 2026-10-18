@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://reductions-phases-announces-smoke.trycloudflare.com
+api=

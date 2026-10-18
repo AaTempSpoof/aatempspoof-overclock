@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://update-musicians-investigators-appliances.trycloudflare.com
+api=

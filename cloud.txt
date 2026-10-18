@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://par-demand-outsourcing-distances.trycloudflare.com
+api=

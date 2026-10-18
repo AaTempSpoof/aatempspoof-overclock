@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=
+api=https://but-publishers-transcripts-print.trycloudflare.com

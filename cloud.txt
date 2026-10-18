@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=
+api=https://dramatic-holiday-catalogs-competent.trycloudflare.com

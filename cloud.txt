@@ -1,2 +1,2 @@
 # Independent overclock API origin.
-api=https://investigators-neon-forwarding-remain.trycloudflare.com
+api=https://occasions-sections-origins-jewish.trycloudflare.com

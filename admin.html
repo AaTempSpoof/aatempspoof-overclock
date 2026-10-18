@@ -9,7 +9,20 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="admin">
-  <div class="site-shell compact-shell">
+  <div class="site-shell compact-shell admin-shell">
+    <aside class="admin-sidebar" aria-label="云端管理导航">
+      <a class="admin-side-brand" href="index.html"><span class="admin-side-logo">OC</span><span><b>统一超频</b><small>云端管理</small></span></a>
+      <nav class="admin-side-nav">
+        <a class="admin-side-link is-active" href="#admin-dashboard">总览</a>
+        <a class="admin-side-link" href="#admin-review">注册审核</a>
+        <a class="admin-side-link" href="#admin-additional">附加功能</a>
+        <a class="admin-side-link" href="#admin-files">文件管理</a>
+        <a class="admin-side-link" href="#admin-donations">捐赠名单</a>
+        <a class="admin-side-link" href="#admin-blacklist">黑名单</a>
+        <a class="admin-side-link" href="#admin-email">捐赠管理</a>
+      </nav>
+      <div class="admin-side-foot"><i></i><span>独立服务运行中</span></div>
+    </aside>
     <header class="topbar">
       <a class="wordmark" href="index.html" aria-label="超频侧载首页"><span class="wordmark-mark" aria-hidden="true">OC</span><span>超频侧载</span></a>
       <span class="service-state"><i class="state-dot"></i>受保护管理入口</span>
@@ -33,37 +46,39 @@
         </form>
       </section>
 
-      <section class="admin-dashboard" data-admin-dashboard hidden>
+      <section class="admin-dashboard" id="admin-dashboard" data-admin-dashboard hidden>
         <div class="admin-toolbar">
           <div><span class="panel-label">SESSION</span><strong data-admin-session-label>已连接</strong></div>
           <button class="button button-secondary button-small" type="button" data-admin-logout>退出登录</button>
         </div>
         <div class="admin-grid">
-          <article class="admin-card">
+          <article class="admin-card" id="admin-queue">
             <div class="admin-card-head"><div><span class="panel-label">DONATION QUEUE</span><h2>捐赠队列</h2></div><button class="icon-button" type="button" data-admin-refresh="queue" title="刷新捐赠队列" aria-label="刷新捐赠队列">↻</button></div>
             <div class="metric-row"><strong data-queue-count>--</strong><span>待处理订单</span></div>
             <div class="admin-list" data-queue-list><div class="empty-state">登录后读取队列</div></div>
           </article>
-          <article class="admin-card">
+          <article class="admin-card" id="admin-review">
             <div class="admin-card-head"><div><span class="panel-label">REGISTRATION REVIEW</span><h2>注册审核</h2></div><button class="icon-button" type="button" data-admin-refresh="review" title="刷新注册审核" aria-label="刷新注册审核">↻</button></div>
             <div class="metric-row"><strong data-review-count>--</strong><span>待审核申请</span></div>
             <div class="admin-list" data-review-list><div class="empty-state">登录后读取审核列表</div></div>
           </article>
-          <article class="admin-card">
+          <article class="admin-card" id="admin-donations">
             <div class="admin-card-head"><div><span class="panel-label">DEVICE POLICY</span><h2>设备名单</h2></div><button class="icon-button" type="button" data-admin-refresh="policy" title="刷新设备名单" aria-label="刷新设备名单">↻</button></div>
             <div class="policy-stats"><div><strong data-allow-count>--</strong><span>白名单</span></div><div><strong data-deny-count>--</strong><span>黑名单</span></div></div>
             <div class="policy-actions"><button class="button button-secondary button-small" type="button" data-policy-action="add-allow">加入白名单</button><button class="button button-danger button-small" type="button" data-policy-action="add-deny">加入黑名单</button></div>
           </article>
-          <article class="admin-card">
+          <article class="admin-card" id="admin-blacklist">
             <div class="admin-card-head"><div><span class="panel-label">SERVICE CONFIG</span><h2>配置状态</h2></div><button class="icon-button" type="button" data-admin-refresh="config" title="刷新配置状态" aria-label="刷新配置状态">↻</button></div>
             <div class="config-list" data-config-list><div class="empty-state">登录后读取配置状态</div></div>
           </article>
-          <article class="admin-card admin-card-wide">
+          <article class="admin-card admin-card-wide" id="admin-email">
             <div class="admin-card-head"><div><span class="panel-label">DONATION SETTINGS</span><h2>捐赠与邮件</h2></div></div>
             <form class="admin-config-form" data-donation-config-form novalidate>
-              <div class="field-row"><label class="field"><span>捐赠金额（元）</span><input name="amount" type="number" min="0.01" step="0.01" required placeholder="例如 9.90"></label><label class="field"><span>收款图 HTTPS 地址</span><input name="payment_image" type="url" placeholder="https://..."></label></div>
+              <div class="field-row"><label class="field"><span>捐赠金额（元）</span><input name="amount" type="number" min="0.01" step="0.01" required placeholder="例如 9.90"></label><label class="field"><span>微信收款图 HTTPS 地址</span><input name="wechat_payment" type="url" placeholder="https://..."></label></div>
+              <label class="field"><span>支付宝收款图 HTTPS 地址</span><input name="alipay_payment" type="url" placeholder="https://..."></label>
               <label class="field"><span>页面公告</span><input name="announcement" maxlength="1000" placeholder="到账后自动发注册链接"></label>
               <label class="check-field"><input name="enabled" type="checkbox">启用捐赠下单</label>
+              <label class="check-field"><input name="announcement_enabled" type="checkbox" checked>显示公告入口</label>
               <label class="check-field"><input name="email_otp_enabled" type="checkbox" checked>启用邮箱验证码</label>
               <button class="button button-secondary button-small" type="submit">保存捐赠设置</button>
             </form>
@@ -75,13 +90,17 @@
               <button class="button button-secondary button-small" type="submit">保存 SMTP 设置</button>
             </form>
           </article>
-          <article class="admin-card admin-card-wide">
+          <article class="admin-card admin-card-wide" id="admin-files">
             <div class="admin-card-head"><div><span class="panel-label">SIGNED POLICY FILES</span><h2>名单文件</h2></div></div>
             <p class="admin-muted">导入后服务端会重新签名；下载文件包含签名摘要，不包含管理 Token。</p>
             <form class="admin-config-form" data-policy-files-form novalidate>
               <div class="field-row"><label class="field"><span>文件类型</span><select name="name" data-policy-file-name><option value="allowlist">授权名单</option><option value="blacklist">黑名单</option></select></label><label class="field"><span>导入文件</span><input type="file" data-policy-file accept="text/plain,.txt"></label></div>
               <div class="policy-file-actions"><button class="button button-secondary button-small" type="submit">导入并重新签名</button><button class="button button-small" type="button" data-policy-download>下载当前文件</button></div>
             </form>
+          </article>
+          <article class="admin-card admin-card-wide" id="admin-additional">
+            <div class="admin-card-head"><div><span class="panel-label">ADDITIONAL FEATURES</span><h2>附加功能</h2></div></div>
+            <div class="admin-tool-grid"><div><strong>设备授权</strong><span>主板 ID、机型、SoC、内核和驱动由服务端签名校验。</span></div><div><strong>授权清单</strong><span>当前清单和模块公钥使用独立超频密钥，不与 AaTempSpoof 共用。</span></div><div><strong>服务健康</strong><span>API、邮件和收款配置状态会显示在配置卡片中。</span></div></div>
           </article>
         </div>
         <div class="form-status" data-admin-action-status role="status" aria-live="polite"></div>

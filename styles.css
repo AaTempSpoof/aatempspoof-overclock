@@ -172,6 +172,14 @@ main { padding: 70px 0 62px; }
 .check-field input { width: 17px; height: 17px; accent-color: var(--ok); }
 .policy-file-actions, .row-actions { display: flex; align-items: center; gap: 13px; }
 .admin-list-row > div:first-child { min-width: 0; }
+.admin-shell { position: relative; max-width: 1320px; padding-left: 256px; }
+.admin-sidebar { position: fixed; left: max(18px, calc((100vw - 1320px) / 2)); top: 24px; bottom: 24px; width: 218px; display: flex; flex-direction: column; gap: 18px; padding: 18px 14px; border: 1px solid var(--line); background: var(--card); box-shadow: var(--shadow); }
+.admin-side-brand { display: flex; align-items: center; gap: 10px; padding: 4px 7px 15px; border-bottom: 1px solid var(--line); }
+.admin-side-logo { display: grid; width: 34px; height: 34px; place-items: center; background: var(--ink); color: var(--acid); font: 700 11px/1 Consolas, monospace; }
+.admin-side-brand b, .admin-side-brand small { display: block; }.admin-side-brand b { font-size: 14px; }.admin-side-brand small { margin-top: 2px; color: var(--muted); font-size: 11px; }
+.admin-side-nav { display: grid; gap: 4px; }.admin-side-link { display: flex; align-items: center; min-height: 41px; padding: 0 11px; color: var(--muted); font-size: 13px; font-weight: 750; }.admin-side-link:hover, .admin-side-link.is-active { background: var(--paper); color: var(--ink); }.admin-side-link.is-active { box-shadow: inset 3px 0 0 var(--ok); }
+.admin-side-foot { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 12px 7px 3px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }.admin-side-foot i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(35,123,97,.12); }
+.admin-tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; margin-top: 20px; background: var(--line); }.admin-tool-grid > div { min-height: 118px; padding: 16px; background: var(--card); }.admin-tool-grid strong, .admin-tool-grid span { display: block; }.admin-tool-grid strong { font-size: 13px; }.admin-tool-grid span { margin-top: 9px; color: var(--muted); font-size: 12px; line-height: 1.65; }
 
 .sponsor-page { width: min(100% - 32px, 720px); margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 0 max(32px, env(safe-area-inset-bottom)); color: #18221d; font-family: "Noto Sans SC", "Segoe UI", system-ui, sans-serif; }
 .sponsor-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
@@ -221,11 +229,19 @@ main { padding: 70px 0 62px; }
   .side-note h2 { margin-top: 17px; }
   .payment-card { min-height: 0; }
   .flow-main { padding-top: 43px; }
+  .admin-shell { padding-left: 20px; }
+  .admin-sidebar { position: static; width: auto; margin-top: 16px; padding: 10px; }
+  .admin-side-brand { padding-bottom: 10px; }
+  .admin-side-nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .admin-side-link { flex: 0 0 auto; min-height: 36px; padding: 0 11px; border: 1px solid var(--line); }
+  .admin-side-link.is-active { box-shadow: none; border-color: var(--ok); }
+  .admin-side-foot { display: none; }
 }
 @media (max-width: 700px) {
   .admin-grid { grid-template-columns: 1fr; }
   .admin-card-wide { grid-column: auto; }
   .admin-toolbar { align-items: flex-start; flex-direction: column; gap: 15px; }
+  .admin-tool-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
   .topbar { height: 70px; }

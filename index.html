@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="referrer" content="no-referrer">
+  <title>超频侧载 · 设备授权</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="home">
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="wordmark" href="index.html" aria-label="超频侧载首页">
+        <span class="wordmark-mark" aria-hidden="true">OC</span>
+        <span>超频侧载</span>
+      </a>
+      <span class="service-state" data-cloud-state><i class="state-dot"></i>正在读取服务状态</span>
+    </header>
+
+    <main>
+      <section class="home-intro">
+        <div class="eyebrow">DEVICE AUTHORIZATION / 01</div>
+        <h1>为你的设备<br><em>匹配正确的超频配置</em></h1>
+        <p class="lede">提交主板 ID 后，服务会根据机型分配可安装的最新版本。每一份授权都绑定设备，方便回溯，也减少误刷风险。</p>
+        <div class="home-actions">
+          <a class="button button-primary" href="register.html">开始注册 <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="donate.html">捐赠并获取资格 <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section class="home-grid" aria-label="服务入口">
+        <article class="feature-panel feature-panel-dark">
+          <div class="panel-index">A / REGISTER</div>
+          <h2>已有注册链接？</h2>
+          <p>填写设备主板 ID、QQ 昵称和邮箱验证码，完成设备授权申请。</p>
+          <a class="text-link" href="register.html">进入注册 <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="feature-panel feature-panel-accent">
+          <div class="panel-index">B / DONATE</div>
+          <h2>还没有注册链接？</h2>
+          <p>创建订单，到账确认后服务器会自动邮件发送专属注册链接。</p>
+          <a class="text-link text-link-dark" href="donate.html">创建订单 <span aria-hidden="true">→</span></a>
+        </article>
+      </section>
+
+      <section class="trust-strip">
+        <div><span class="trust-number">01</span><span>设备 ID 绑定</span></div>
+        <div><span class="trust-number">02</span><span>机型自动匹配</span></div>
+        <div><span class="trust-number">03</span><span>服务端签名校验</span></div>
+      </section>
+
+      <section class="status-panel" data-home-status aria-live="polite">
+        <div>
+          <div class="panel-label">SERVICE CONFIGURATION</div>
+          <strong data-home-status-title>正在检查服务端配置</strong>
+        </div>
+        <span class="status-copy" data-home-status-copy>请稍候</span>
+      </section>
+    </main>
+
+    <footer class="footer"><span>超频侧载</span><span>仅用于已授权设备</span></footer>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

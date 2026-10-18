@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="referrer" content="no-referrer">
+  <title>管理控制台 · 超频侧载</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="admin">
+  <div class="site-shell compact-shell">
+    <header class="topbar">
+      <a class="wordmark" href="index.html" aria-label="超频侧载首页"><span class="wordmark-mark" aria-hidden="true">OC</span><span>超频侧载</span></a>
+      <span class="service-state"><i class="state-dot"></i>受保护管理入口</span>
+    </header>
+
+    <main class="flow-main admin-main">
+      <div class="flow-heading">
+        <div class="eyebrow">ADMIN CONSOLE / PRIVATE</div>
+        <h1>管理控制台</h1>
+        <p>审核设备申请、处理捐赠队列，并查看服务配置状态。</p>
+      </div>
+
+      <section class="admin-login" data-admin-login-panel>
+        <form class="form-card admin-login-card" data-admin-login novalidate>
+          <div class="panel-label">SERVER AUTHENTICATION</div>
+          <h2>登录独立超频服务</h2>
+          <p class="admin-muted">登录由独立服务端验证。Token 只在本次页面会话中提交，不写入 URL、源码或持久存储。</p>
+          <label class="field"><span>管理 Token <b>*</b></span><input name="token" type="password" autocomplete="current-password" required placeholder="输入服务端管理 Token"></label>
+          <button class="button button-primary button-wide" type="submit"><span>登录管理端</span><span aria-hidden="true">→</span></button>
+          <div class="form-status" data-admin-login-status role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="admin-dashboard" data-admin-dashboard hidden>
+        <div class="admin-toolbar">
+          <div><span class="panel-label">SESSION</span><strong data-admin-session-label>已连接</strong></div>
+          <button class="button button-secondary button-small" type="button" data-admin-logout>退出登录</button>
+        </div>
+        <div class="admin-grid">
+          <article class="admin-card">
+            <div class="admin-card-head"><div><span class="panel-label">DONATION QUEUE</span><h2>捐赠队列</h2></div><button class="icon-button" type="button" data-admin-refresh="queue" title="刷新捐赠队列" aria-label="刷新捐赠队列">↻</button></div>
+            <div class="metric-row"><strong data-queue-count>--</strong><span>待处理订单</span></div>
+            <div class="admin-list" data-queue-list><div class="empty-state">登录后读取队列</div></div>
+          </article>
+          <article class="admin-card">
+            <div class="admin-card-head"><div><span class="panel-label">REGISTRATION REVIEW</span><h2>注册审核</h2></div><button class="icon-button" type="button" data-admin-refresh="review" title="刷新注册审核" aria-label="刷新注册审核">↻</button></div>
+            <div class="metric-row"><strong data-review-count>--</strong><span>待审核申请</span></div>
+            <div class="admin-list" data-review-list><div class="empty-state">登录后读取审核列表</div></div>
+          </article>
+          <article class="admin-card">
+            <div class="admin-card-head"><div><span class="panel-label">DEVICE POLICY</span><h2>设备名单</h2></div><button class="icon-button" type="button" data-admin-refresh="policy" title="刷新设备名单" aria-label="刷新设备名单">↻</button></div>
+            <div class="policy-stats"><div><strong data-allow-count>--</strong><span>白名单</span></div><div><strong data-deny-count>--</strong><span>黑名单</span></div></div>
+            <div class="policy-actions"><button class="button button-secondary button-small" type="button" data-policy-action="add-allow">加入白名单</button><button class="button button-danger button-small" type="button" data-policy-action="add-deny">加入黑名单</button></div>
+          </article>
+          <article class="admin-card">
+            <div class="admin-card-head"><div><span class="panel-label">SERVICE CONFIG</span><h2>配置状态</h2></div><button class="icon-button" type="button" data-admin-refresh="config" title="刷新配置状态" aria-label="刷新配置状态">↻</button></div>
+            <div class="config-list" data-config-list><div class="empty-state">登录后读取配置状态</div></div>
+          </article>
+          <article class="admin-card admin-card-wide">
+            <div class="admin-card-head"><div><span class="panel-label">DONATION SETTINGS</span><h2>捐赠与邮件</h2></div></div>
+            <form class="admin-config-form" data-donation-config-form novalidate>
+              <div class="field-row"><label class="field"><span>捐赠金额（元）</span><input name="amount" type="number" min="0.01" step="0.01" required placeholder="例如 9.90"></label><label class="field"><span>收款图 HTTPS 地址</span><input name="payment_image" type="url" placeholder="https://..."></label></div>
+              <label class="field"><span>页面公告</span><input name="announcement" maxlength="1000" placeholder="到账后自动发注册链接"></label>
+              <label class="check-field"><input name="enabled" type="checkbox">启用捐赠下单</label>
+              <label class="check-field"><input name="email_otp_enabled" type="checkbox" checked>启用邮箱验证码</label>
+              <button class="button button-secondary button-small" type="submit">保存捐赠设置</button>
+            </form>
+            <form class="admin-config-form" data-smtp-config-form novalidate>
+              <div class="field-row"><label class="field"><span>SMTP 主机</span><input name="host" required placeholder="smtp.example.com"></label><label class="field"><span>端口</span><input name="port" type="number" value="465" min="1" max="65535" required></label></div>
+              <div class="field-row"><label class="field"><span>发件地址</span><input name="sender" type="email" required placeholder="noreply@example.com"></label><label class="field"><span>用户名</span><input name="username" autocomplete="off"></label></div>
+              <label class="field"><span>SMTP 密码</span><input name="password" type="password" autocomplete="new-password" required></label>
+              <label class="check-field"><input name="starttls" type="checkbox">使用 STARTTLS</label>
+              <button class="button button-secondary button-small" type="submit">保存 SMTP 设置</button>
+            </form>
+          </article>
+          <article class="admin-card admin-card-wide">
+            <div class="admin-card-head"><div><span class="panel-label">SIGNED POLICY FILES</span><h2>名单文件</h2></div></div>
+            <p class="admin-muted">导入后服务端会重新签名；下载文件包含签名摘要，不包含管理 Token。</p>
+            <form class="admin-config-form" data-policy-files-form novalidate>
+              <div class="field-row"><label class="field"><span>文件类型</span><select name="name" data-policy-file-name><option value="allowlist">授权名单</option><option value="blacklist">黑名单</option></select></label><label class="field"><span>导入文件</span><input type="file" data-policy-file accept="text/plain,.txt"></label></div>
+              <div class="policy-file-actions"><button class="button button-secondary button-small" type="submit">导入并重新签名</button><button class="button button-small" type="button" data-policy-download>下载当前文件</button></div>
+            </form>
+          </article>
+        </div>
+        <div class="form-status" data-admin-action-status role="status" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer class="footer"><a href="index.html">返回首页</a><span>管理接口由独立服务端鉴权</span></footer>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

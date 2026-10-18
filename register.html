@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="referrer" content="no-referrer">
+  <title>注册设备 · 超频侧载</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="register">
+  <div class="site-shell compact-shell">
+    <header class="topbar">
+      <a class="wordmark" href="index.html" aria-label="超频侧载首页"><span class="wordmark-mark" aria-hidden="true">OC</span><span>超频侧载</span></a>
+      <a class="topbar-link" href="donate.html">去创建订单 <span aria-hidden="true">→</span></a>
+    </header>
+
+    <main class="flow-main">
+      <div class="flow-heading">
+        <div class="eyebrow">REGISTRATION / 02</div>
+        <h1>注册设备</h1>
+        <p>你的设备信息只用于匹配机型和发送授权结果。</p>
+      </div>
+
+      <section class="form-layout">
+        <form class="form-card" data-register-form novalidate>
+          <input type="hidden" name="issued">
+          <input type="hidden" name="expires">
+          <input type="hidden" name="nonce">
+          <input type="hidden" name="order">
+          <input type="hidden" name="sig">
+          <label class="field">
+            <span>主板 ID <b>*</b></span>
+            <input name="id" type="text" autocomplete="off" minlength="4" maxlength="96" required placeholder="例如 PLK110-SERIAL-0001">
+            <small>在设备上读取的 serial_number，区分大小写。</small>
+          </label>
+          <div class="field-row">
+            <label class="field"><span>QQ 号 <b>*</b></span><input name="qq" inputmode="numeric" maxlength="32" required placeholder="用于联系授权结果"></label>
+            <label class="field"><span>QQ 昵称 <b>*</b></span><input name="nickname" maxlength="60" required placeholder="你的昵称"></label>
+          </div>
+          <div class="field email-field" data-email-panel>
+            <span>订单邮箱验证码 <b>*</b></span>
+            <div class="input-with-action"><input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="捐赠订单中绑定的邮箱"><button class="button button-small" type="button" data-send-code>获取验证码</button></div>
+            <div class="input-with-action"><input name="emailCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="6 位验证码"><span class="code-hint" data-code-hint>验证码 10 分钟内有效</span></div>
+          </div>
+          <button class="button button-primary button-wide" type="submit"><span data-submit-label>提交注册</span><span aria-hidden="true">→</span></button>
+          <div class="form-status" data-register-status role="status" aria-live="polite"></div>
+        </form>
+
+        <aside class="side-note">
+          <div class="side-note-number">02</div>
+          <h2>让服务器<br><em>替你选版本</em></h2>
+          <p>注册完成后，服务端会按主板 ID 与机型档案匹配最新可安装版本。授权响应包含有效期和签名，客户端会在安装前再次校验。</p>
+          <div class="side-rule"></div>
+          <span class="side-caption">SECURE DEVICE BINDING</span>
+        </aside>
+      </section>
+    </main>
+    <footer class="footer"><a href="index.html">返回首页</a><span>服务未配置时不会提交信息</span></footer>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

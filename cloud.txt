@@ -1,0 +1,3 @@
+# Deployment writes the active API origin on this line.
+# Example: api=https://your-authorized-api.example
+api=

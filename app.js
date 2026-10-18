@@ -172,12 +172,14 @@
       state.config = data;
       const configured = data.available === true && data.enabled !== false;
       paymentPanel.classList.toggle('is-unavailable', !configured);
+      const orderButton = $('button[type="submit"]', form);
+      orderButton.disabled = !configured;
       $('[data-payment-state]').textContent = configured ? '已配置' : '未配置';
       amount.textContent = configured && data.amount ? (String(data.amount).includes('¥') ? data.amount : '¥' + data.amount) : '--';
       announcement.textContent = data.announcement || (configured ? '请按页面提示完成付款。' : '服务端尚未配置订单信息。');
       const imageUrl = validImageUrl(data.paymentImage || data.paymentImageUrl || '');
       if (configured && imageUrl) { image.src = imageUrl; imageWrap.hidden = false; unavailable.hidden = true; } else { imageWrap.hidden = true; unavailable.hidden = false; }
-      setStatus(status, configured ? '订单服务已就绪。' : '服务暂不可用，请稍后再试。', configured ? 'ok' : 'error');
+      setStatus(status, configured ? '订单服务已就绪。' : '捐赠、收款图或邮件发送尚未配置。', configured ? 'ok' : 'error');
     } catch (error) {
       paymentPanel.classList.add('is-unavailable'); $('[data-payment-state]').textContent = '未连接'; unavailable.hidden = false; setCloudState('服务暂不可用', true); setStatus(status, error.message || '无法读取订单配置。', 'error'); return;
     }

@@ -1,6 +1,6 @@
 AATS-OC-MANIFEST-V1
 schema=1
-package_version=1.0.2
+package_version=1.0.8
 profile_id=oneplus10pro device_code=NE2210 model_name=一加10_Pro soc=SM8450,taro kernel_release=5.10.236-gki-g0b92723d0f5a uname_aliases=5.10.236-android12-9-OanPora-26w07f legacy_module_ids=oneplus10pro_ko_oc driver=msm_drm checksums_sha256=57f04eed4d5a8991ec4485f9eaea719c935de7ffabed5f259de118eeae68ce43 module_version=1.0.0 module_id=oneplus10pro_ko_oc
 profile_id=oneplus13 device_code=PJZ110 model_name=一加13 soc=SM8750,sun kernel_release=6.6.118-android15-8-o-4k uname_aliases=6.6.118-android15-8-g93e223c276e7-abogki500782043-4k legacy_module_ids=oneplus13_ko_oc driver=msm_drm checksums_sha256=232d073622e23d8bef65550bf9367eede5c18d2f0e8cf1b1ff232864a76e3384 module_version=1.1.0 module_id=oneplus13_ko_oc
 profile_id=oneplus13t device_code=PKX110 model_name=一加13T soc=SM8750,sun kernel_release=6.6.118-android15-8-o-4k uname_aliases=6.6.118-android15-8-g9bc34d5b0c79-abogki537459655-4k legacy_module_ids=oneplus13t_ko_oc driver=msm_drm checksums_sha256=4749a31a932bebdacf5a85e42d5081b787b43cecd4ac233e6087c4db5f77ebd1 module_version=1.0.0 module_id=oneplus13t_ko_oc

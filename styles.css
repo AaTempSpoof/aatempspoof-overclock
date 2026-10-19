@@ -190,6 +190,10 @@ main { padding: 70px 0 62px; }
 .admin-tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; margin-top: 20px; background: var(--line); }.admin-tool-grid > div { min-height: 118px; padding: 16px; background: var(--card); }.admin-tool-grid strong, .admin-tool-grid span { display: block; }.admin-tool-grid strong { font-size: 13px; }.admin-tool-grid span { margin-top: 9px; color: var(--muted); font-size: 12px; line-height: 1.65; }
 .notification-presence { margin: 13px 0 4px; color: var(--muted); font-size: 12px; }.notification-row { align-items: flex-start; }.notification-row main { min-width: 0; }.notification-row small { flex: 0 0 auto; color: var(--muted); font-size: 11px; white-space: nowrap; }
 .admin-card-actions { display: flex; align-items: center; gap: 8px; }
+.policy-lists { display: grid; gap: 14px; margin-top: 18px; }
+.policy-lists > div > strong { display: block; margin-bottom: 6px; font-size: 12px; }
+.policy-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.policy-row code { min-width: 0; overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; }
 
 .sponsor-page { width: min(100% - 32px, 720px); margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 0 max(32px, env(safe-area-inset-bottom)); color: #18221d; font-family: "Noto Sans SC", "Segoe UI", system-ui, sans-serif; }
 .sponsor-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }

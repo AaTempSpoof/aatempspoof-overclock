@@ -282,6 +282,20 @@
     ];
     entries.forEach(([label, value, yes, no]) => { const row = document.createElement('div'); row.className = 'config-row'; const name = document.createElement('span'); name.textContent = label; const status = document.createElement('strong'); status.textContent = value === true || value === 'true' || value === 'configured' ? yes : no; status.className = status.textContent === yes || status.textContent === '正常' ? 'is-ok' : 'is-muted'; row.append(name, status); node.appendChild(row); });
   }
+  function renderPolicyList(node, items, action) {
+    if (!node) return;
+    node.textContent = '';
+    if (!Array.isArray(items) || !items.length) {
+      const empty = document.createElement('div'); empty.className = 'empty-state'; empty.textContent = '名单为空'; node.appendChild(empty); return;
+    }
+    items.forEach(value => {
+      const row = document.createElement('div'); row.className = 'policy-row';
+      const label = document.createElement('code'); label.textContent = String(value); label.title = String(value);
+      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'text-action text-action-danger';
+      remove.dataset.policyRemove = action; remove.dataset.policyId = String(value); remove.textContent = '移除';
+      row.append(label, remove); node.appendChild(row);
+    });
+  }
   function renderNotificationList(node, items, payments) {
     if (!node) return;
     node.textContent = '';
@@ -312,7 +326,12 @@
       const data = await adminRequest(paths[kind], { method: 'GET' });
       if (kind === 'queue') { $('[data-queue-count]').textContent = text(data.pendingCount != null ? data.pendingCount : (data.items || []).length, '0'); renderAdminList($('[data-queue-list]'), data.items || data.queue, 'queue'); }
       if (kind === 'review') { $('[data-review-count]').textContent = text(data.pendingCount != null ? data.pendingCount : (data.items || []).length, '0'); renderAdminList($('[data-review-list]'), data.items || data.pending, 'review'); }
-      if (kind === 'policy') { $('[data-allow-count]').textContent = text(data.allowCount != null ? data.allowCount : (data.allowlist || []).length, '0'); $('[data-deny-count]').textContent = text(data.denyCount != null ? data.denyCount : (data.denylist || []).length, '0'); }
+      if (kind === 'policy') {
+        $('[data-allow-count]').textContent = text(data.allowCount != null ? data.allowCount : (data.allowlist || []).length, '0');
+        $('[data-deny-count]').textContent = text(data.denyCount != null ? data.denyCount : (data.denylist || []).length, '0');
+        renderPolicyList($('[data-allow-list]'), data.allowlist, 'allow');
+        renderPolicyList($('[data-deny-list]'), data.denylist, 'deny');
+      }
       if (kind === 'config') {
         renderConfig($('[data-config-list]'), data);
         const donationForm = $('[data-donation-config-form]');
@@ -412,6 +431,15 @@
       catch (error) { setStatus(actionStatus, error.message || '设备名单更新失败。', 'error'); }
     }));
     dashboard.addEventListener('click', async event => {
+      const removePolicy = event.target.closest('[data-policy-remove]');
+      if (removePolicy) {
+        try {
+          await adminRequest('/admin/policy', jsonOptions({ action: 'remove-' + removePolicy.dataset.policyRemove, id: removePolicy.dataset.policyId }));
+          setStatus(actionStatus, '设备名单已更新并签名。', 'ok');
+          await loadAdminData('policy', actionStatus);
+        } catch (error) { setStatus(actionStatus, error.message || '设备名单更新失败。', 'error'); }
+        return;
+      }
       const button = event.target.closest('[data-admin-action]'); if (!button) return;
       try {
         await adminRequest('/admin/action', jsonOptions({ action: button.dataset.adminAction, id: button.dataset.itemId }));

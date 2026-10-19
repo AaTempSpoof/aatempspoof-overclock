@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101820">
   <meta name="referrer" content="no-referrer">
-  <title>管理控制台 · KO侧载超频</title>
+  <title>KO侧载超频 · 云端管理</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="admin">
@@ -13,28 +13,28 @@
     <aside class="admin-sidebar" aria-label="云端管理导航">
       <a class="admin-side-brand" href="index.html"><span class="admin-side-logo">KO</span><span><b>KO侧载超频</b><small>云端管理</small></span></a>
       <nav class="admin-side-nav">
-        <a class="admin-side-link is-active" href="#admin-dashboard">总览</a>
-        <a class="admin-side-link" href="#admin-review">注册审核</a>
-        <a class="admin-side-link" href="#admin-additional">附加功能</a>
-        <a class="admin-side-link" href="#admin-files">文件管理</a>
-        <a class="admin-side-link" href="#admin-donations">捐赠名单</a>
-        <a class="admin-side-link" href="#admin-blacklist">黑名单</a>
-        <a class="admin-side-link" href="#admin-email">捐赠管理</a>
-        <a class="admin-side-link" href="#admin-notifications">通知日志</a>
-        <a class="admin-side-link" href="#admin-payment-notifications">收款通知</a>
+        <a class="admin-side-link is-active" data-admin-nav href="#admin-dashboard">总览</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-review">注册审核</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-additional">附加功能</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-files">文件管理</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-donations">捐赠名单</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-blacklist">黑名单</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-email">捐赠管理</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-notifications">通知日志</a>
+        <a class="admin-side-link" data-admin-nav href="#admin-payment-notifications">收款通知</a>
       </nav>
       <div class="admin-side-foot"><i></i><span>独立服务运行中</span></div>
     </aside>
     <header class="topbar">
-      <a class="wordmark" href="index.html" aria-label="KO侧载超频首页"><span class="wordmark-mark" aria-hidden="true">KO</span><span>KO侧载超频</span></a>
-      <span class="service-state"><i class="state-dot"></i>受保护管理入口</span>
+      <a class="wordmark" href="index.html" aria-label="KO侧载超频首页"><span class="wordmark-mark" aria-hidden="true">KO</span><span>KO侧载超频 · 云端管理</span></a>
+      <span class="service-state"><i class="state-dot"></i><span data-admin-top-state>服务运行中</span></span>
     </header>
 
     <main class="flow-main admin-main">
       <div class="flow-heading">
         <div class="eyebrow">ADMIN CONSOLE / PRIVATE</div>
         <h1>管理控制台</h1>
-        <p>审核设备申请、处理捐赠队列、维护名单，并查看通知与服务配置。</p>
+        <p>审核设备申请、处理捐赠队列、维护授权名单，并查看手机通知与服务状态。</p>
       </div>
 
       <section class="admin-login" data-admin-login-panel>
@@ -53,28 +53,42 @@
           <div><span class="panel-label">SESSION</span><strong data-admin-session-label>已连接</strong></div>
           <button class="button button-secondary button-small" type="button" data-admin-logout>退出登录</button>
         </div>
+        <div class="admin-stat-grid" aria-label="服务总览">
+          <a class="admin-stat-card" href="#admin-dashboard"><span class="admin-stat-icon">◉</span><span><small>云端服务</small><strong class="is-ok">运行中</strong><em>KO API 与管理页在线</em></span></a>
+          <a class="admin-stat-card" href="#admin-notifications"><span class="admin-stat-icon">⌁</span><span><small>手机通知</small><strong data-dashboard-phone class="is-muted">读取中</strong><em data-dashboard-phone-time>等待心跳</em></span></a>
+          <a class="admin-stat-card" href="#admin-email"><span class="admin-stat-icon">¥</span><span><small>捐赠配置</small><strong data-dashboard-amount>--</strong><em>收款与邮件自动发链</em></span></a>
+          <a class="admin-stat-card" href="#admin-review"><span class="admin-stat-icon">✓</span><span><small>待审核注册</small><strong data-dashboard-review>--</strong><em>已授权设备由签名名单控制</em></span></a>
+          <a class="admin-stat-card" href="#admin-notifications"><span class="admin-stat-icon">▤</span><span><small>最近通知</small><strong data-dashboard-notifications>--</strong><em>手机通知日志</em></span></a>
+        </div>
+        <div class="admin-entry-card"><div><b>当前安全入口</b><p>手机和其他设备通过这个 KO 独立 API 访问服务；点击地址可复制。</p></div><code data-admin-entry>读取中</code></div>
         <div class="admin-grid">
-          <article class="admin-card" id="admin-queue">
+          <article class="admin-card" data-admin-section="dashboard email" id="admin-queue">
             <div class="admin-card-head"><div><span class="panel-label">DONATION QUEUE</span><h2>捐赠队列</h2></div><button class="icon-button" type="button" data-admin-refresh="queue" title="刷新捐赠队列" aria-label="刷新捐赠队列">↻</button></div>
             <div class="metric-row"><strong data-queue-count>--</strong><span>待处理订单</span></div>
             <div class="admin-list" data-queue-list><div class="empty-state">登录后读取队列</div></div>
           </article>
-          <article class="admin-card" id="admin-review">
+          <article class="admin-card" data-admin-section="dashboard review" id="admin-review">
             <div class="admin-card-head"><div><span class="panel-label">REGISTRATION REVIEW</span><h2>注册审核</h2></div><button class="icon-button" type="button" data-admin-refresh="review" title="刷新注册审核" aria-label="刷新注册审核">↻</button></div>
             <div class="metric-row"><strong data-review-count>--</strong><span>待审核申请</span></div>
             <div class="admin-list" data-review-list><div class="empty-state">登录后读取审核列表</div></div>
           </article>
-          <article class="admin-card" id="admin-donations">
-            <div class="admin-card-head"><div><span class="panel-label">DEVICE POLICY</span><h2>设备名单</h2></div><button class="icon-button" type="button" data-admin-refresh="policy" title="刷新设备名单" aria-label="刷新设备名单">↻</button></div>
-            <div class="policy-stats"><div><strong data-allow-count>--</strong><span>白名单</span></div><div><strong data-deny-count>--</strong><span>黑名单</span></div></div>
-            <div class="policy-actions"><button class="button button-secondary button-small" type="button" data-policy-action="add-allow">加入白名单</button><button class="button button-danger button-small" type="button" data-policy-action="add-deny">加入黑名单</button></div>
-            <div class="policy-lists"><div><strong>授权名单摘要</strong><div class="admin-list" data-allow-list></div></div><div><strong>黑名单摘要</strong><div class="admin-list" data-deny-list></div></div></div>
+          <article class="admin-card" data-admin-section="dashboard donations" id="admin-donations">
+            <div class="admin-card-head"><div><span class="panel-label">DONATION ALLOWLIST</span><h2>捐赠名单</h2></div><button class="icon-button" type="button" data-admin-refresh="policy" title="刷新捐赠名单" aria-label="刷新捐赠名单">↻</button></div>
+            <div class="metric-row"><strong data-allow-count>--</strong><span>已授权设备</span></div>
+            <div class="policy-actions"><button class="button button-secondary button-small" type="button" data-policy-action="add-allow">加入白名单</button></div>
+            <div class="policy-lists"><div><strong>授权设备 ID / 主板哈希</strong><div class="admin-list" data-allow-list></div></div></div>
           </article>
-          <article class="admin-card" id="admin-blacklist">
+          <article class="admin-card" data-admin-section="dashboard blacklist" id="admin-blacklist">
+            <div class="admin-card-head"><div><span class="panel-label">BLACKLIST</span><h2>黑名单</h2></div><button class="icon-button" type="button" data-admin-refresh="policy" title="刷新黑名单" aria-label="刷新黑名单">↻</button></div>
+            <div class="metric-row"><strong data-deny-count>--</strong><span>已拦截设备</span></div>
+            <div class="policy-actions"><button class="button button-danger button-small" type="button" data-policy-action="add-deny">加入黑名单</button></div>
+            <div class="policy-lists"><div><strong>黑名单 ID / 哈希</strong><div class="admin-list" data-deny-list></div></div></div>
+          </article>
+          <article class="admin-card" data-admin-section="dashboard additional" id="admin-config">
             <div class="admin-card-head"><div><span class="panel-label">SERVICE CONFIG</span><h2>配置状态</h2></div><button class="icon-button" type="button" data-admin-refresh="config" title="刷新配置状态" aria-label="刷新配置状态">↻</button></div>
             <div class="config-list" data-config-list><div class="empty-state">登录后读取配置状态</div></div>
           </article>
-          <article class="admin-card admin-card-wide" id="admin-email">
+          <article class="admin-card admin-card-wide" data-admin-section="email" id="admin-email">
             <div class="admin-card-head"><div><span class="panel-label">DONATION SETTINGS</span><h2>捐赠与邮件</h2></div></div>
             <form class="admin-config-form" data-donation-config-form novalidate>
               <div class="field-row"><label class="field"><span>捐赠金额（元）</span><input name="amount" type="number" min="0.01" step="0.01" required placeholder="例如 9.90"></label><label class="field"><span>微信收款图 HTTPS 地址</span><input name="wechat_payment" type="url" placeholder="https://..."></label></div>
@@ -93,7 +107,7 @@
               <button class="button button-secondary button-small" type="submit">保存 SMTP 设置</button>
             </form>
           </article>
-          <article class="admin-card admin-card-wide" id="admin-files">
+          <article class="admin-card admin-card-wide" data-admin-section="files" id="admin-files">
             <div class="admin-card-head"><div><span class="panel-label">SIGNED POLICY FILES</span><h2>名单文件</h2></div></div>
             <p class="admin-muted">导入后服务端会重新签名；下载文件包含签名摘要，不包含管理 Token。</p>
             <form class="admin-config-form" data-policy-files-form novalidate>
@@ -101,17 +115,17 @@
               <div class="policy-file-actions"><button class="button button-secondary button-small" type="submit">导入并重新签名</button><button class="button button-small" type="button" data-policy-download>下载当前文件</button></div>
             </form>
           </article>
-          <article class="admin-card admin-card-wide" id="admin-additional">
+          <article class="admin-card admin-card-wide" data-admin-section="additional" id="admin-additional">
             <div class="admin-card-head"><div><span class="panel-label">ADDITIONAL FEATURES</span><h2>附加功能</h2></div></div>
             <div class="admin-tool-grid"><div><strong>设备授权</strong><span>主板 ID、机型、SoC、内核和驱动由服务端签名校验。</span></div><div><strong>授权清单</strong><span>当前清单和模块公钥使用 KO 侧载超频独立密钥。</span></div><div><strong>服务健康</strong><span>API、邮件和收款配置状态会显示在配置卡片中。</span></div></div>
           </article>
-          <article class="admin-card admin-card-wide" id="admin-notifications">
+          <article class="admin-card admin-card-wide" data-admin-section="notifications" id="admin-notifications">
             <div class="admin-card-head"><div><span class="panel-label">PHONE NOTIFICATIONS</span><h2>手机通知日志</h2></div><div class="admin-card-actions"><button class="button button-secondary button-small" type="button" data-phone-pair>复制手机配对密钥</button><button class="button button-small" type="button" data-admin-clear-notifications>清空日志</button><button class="icon-button" type="button" data-admin-refresh="notifications" title="刷新手机通知日志" aria-label="刷新手机通知日志">↻</button></div></div>
             <div class="notification-presence" data-notification-presence>通知设备状态读取中</div>
             <p class="admin-muted">配对密钥只用于手机到 KO 侧载超频服务的收款通知签名。</p>
             <div class="admin-list notification-list" data-notification-list><div class="empty-state">登录后读取手机通知</div></div>
           </article>
-          <article class="admin-card admin-card-wide" id="admin-payment-notifications">
+          <article class="admin-card admin-card-wide" data-admin-section="notifications" id="admin-payment-notifications">
             <div class="admin-card-head"><div><span class="panel-label">PAYMENT NOTIFICATIONS</span><h2>收款通知</h2></div><button class="icon-button" type="button" data-admin-refresh="payments" title="刷新收款通知" aria-label="刷新收款通知">↻</button></div>
             <div class="admin-list notification-list" data-payment-notification-list><div class="empty-state">登录后读取收款通知</div></div>
           </article>
@@ -119,6 +133,13 @@
         <div class="form-status" data-admin-action-status role="status" aria-live="polite"></div>
       </section>
     </main>
+    <div class="admin-mobile-tabs" aria-label="移动端管理导航">
+      <a data-admin-nav href="#admin-dashboard" class="is-active">总览</a>
+      <a data-admin-nav href="#admin-review">审核</a>
+      <a data-admin-nav href="#admin-donations">名单</a>
+      <a data-admin-nav href="#admin-email">捐赠</a>
+      <a data-admin-nav href="#admin-notifications">通知</a>
+    </div>
     <footer class="footer"><a href="index.html">返回首页</a><span>KO侧载超频管理接口由独立服务端鉴权</span></footer>
   </div>
   <script src="app.js" defer></script>

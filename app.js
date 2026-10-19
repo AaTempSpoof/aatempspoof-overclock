@@ -360,7 +360,63 @@
         $('[data-notification-presence]').textContent = presence.online ? '通知设备在线 · 最近心跳 ' + new Date(Number(presence.lastSeen || 0)).toLocaleString() : '通知设备暂未在线';
       }
       if (kind === 'payments') renderNotificationList($('[data-payment-notification-list]'), data.items, true);
+      updateAdminOverview(kind, data);
+      return data;
     } catch (error) { setStatus(statusNode, error.message || '读取管理数据失败。', 'error'); }
+  }
+  const adminOverview = { queue: null, review: null, config: null, notifications: null };
+  function updateAdminOverview(kind, data) {
+    if (Object.prototype.hasOwnProperty.call(adminOverview, kind)) adminOverview[kind] = data;
+    const review = adminOverview.review || {};
+    const queue = adminOverview.queue || {};
+    const config = adminOverview.config || {};
+    const notifications = adminOverview.notifications || {};
+    const reviewCount = $('[data-dashboard-review]');
+    const notificationCount = $('[data-dashboard-notifications]');
+    const amount = $('[data-dashboard-amount]');
+    const phone = $('[data-dashboard-phone]');
+    const phoneTime = $('[data-dashboard-phone-time]');
+    const entry = $('[data-admin-entry]');
+    const topState = $('[data-admin-top-state]');
+    if (reviewCount) reviewCount.textContent = text(review.pendingCount != null ? review.pendingCount : (review.items || []).length, '0');
+    if (notificationCount) notificationCount.textContent = text(notifications.count != null ? notifications.count : (notifications.items || []).length, '0');
+    if (amount) amount.textContent = config.amount ? '¥' + config.amount : '--';
+    const presence = notifications.presence || {};
+    if (phone) {
+      phone.textContent = presence.online ? '在线' : '离线';
+      phone.className = presence.online ? 'is-ok' : 'is-muted';
+    }
+    if (phoneTime) phoneTime.textContent = presence.lastSeen ? '最后心跳：' + new Date(Number(presence.lastSeen)).toLocaleString() : '等待心跳';
+    if (entry && state.api) entry.textContent = state.api;
+    if (topState && state.api) topState.textContent = '服务运行中';
+  }
+  function applyAdminSection(view) {
+    const target = view || 'dashboard';
+    const dashboard = $('[data-admin-dashboard]');
+    if (!dashboard) return;
+    dashboard.dataset.adminView = target;
+    $$('.admin-card[data-admin-section]', dashboard).forEach(card => {
+      const sections = String(card.dataset.adminSection || '').split(/\s+/).filter(Boolean);
+      card.hidden = !sections.includes(target);
+    });
+    $$('[data-admin-nav]').forEach(link => {
+      const active = (link.getAttribute('href') || '').slice(1).replace(/^admin-/, '') === target;
+      link.classList.toggle('is-active', active);
+      link.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+  }
+  function initAdminNavigation() {
+    const valid = new Set(['dashboard', 'review', 'additional', 'files', 'donations', 'blacklist', 'email', 'notifications']);
+    const select = () => {
+      const raw = (location.hash || '#admin-dashboard').slice(1).replace(/^admin-/, '');
+      const view = valid.has(raw) ? raw : 'dashboard';
+      applyAdminSection(view);
+    };
+    $$('[data-admin-nav]').forEach(link => link.addEventListener('click', () => {
+      window.setTimeout(select, 0);
+    }));
+    window.addEventListener('hashchange', select);
+    select();
   }
   async function initAdmin() {
     const loginPanel = $('[data-admin-login-panel]');
@@ -370,6 +426,8 @@
     const loginStatus = $('[data-admin-login-status]');
     const actionStatus = $('[data-admin-action-status]');
     try { await loadCloud(); } catch (error) { setCloudState('服务暂不可用', true); setStatus(loginStatus, error.message || '服务端入口未配置。', 'error'); return; }
+    initAdminNavigation();
+    updateAdminOverview('config', { api: true });
     const localDirect = /^https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/i.test(state.api);
     if (localDirect) {
       loginPanel.hidden = true;

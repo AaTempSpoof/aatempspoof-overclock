@@ -70,6 +70,14 @@ main { padding: 70px 0 62px; }
 .status-panel { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 0; }
 .status-panel strong { display: block; margin-top: 5px; font-size: 15px; }
 .status-copy { color: var(--muted); font-size: 13px; }
+.module-downloads { margin-top: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+.module-download-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 65px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.module-download-copy { min-width: 0; }
+.module-download-copy strong, .module-download-copy small { display: block; }
+.module-download-copy strong { font-size: 14px; }
+.module-download-copy small { margin-top: 2px; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.module-download-action { flex: 0 0 auto; color: var(--ok); font-size: 13px; font-weight: 800; white-space: nowrap; }
+.module-download-row:hover .module-download-action { color: var(--ink); }
 .footer { display: flex; justify-content: space-between; gap: 20px; padding: 22px 0 30px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 .footer a { color: var(--ink); font-weight: 700; }
 

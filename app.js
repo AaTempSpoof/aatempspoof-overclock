@@ -162,7 +162,7 @@
     const announcementTrigger = $('[data-announcement-trigger]'), announcementModal = $('[data-announcement-modal]');
     const announcementBody = $('[data-announcement-body]');
     let pollTimer = null, countdownTimer = null, orderId = '', statusToken = '', deadlineAt = 0, serverOffset = 0, queueState = '';
-    const storageKey = 'aaOverclockDonationIntent';
+    const storageKey = 'koSidecarDonationIntent';
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch (_) { saved = null; }
     function saveIntent() { try { localStorage.setItem(storageKey, JSON.stringify({ orderId, statusToken })); } catch (_) {} }
@@ -370,15 +370,26 @@
     const policyFileInput = $('[data-policy-file]');
     const policyDownload = $('[data-policy-download]');
     const phonePairButton = $('[data-phone-pair]');
+    const clearNotificationsButton = $('[data-admin-clear-notifications]');
     phonePairButton?.addEventListener('click', async () => {
       setButtonBusy(phonePairButton, true, '读取中', '复制手机配对密钥');
       try {
         const data = await adminRequest('/admin/phone-token', { method: 'GET' });
         if (!data.token || !navigator.clipboard?.writeText) throw new Error('当前浏览器无法写入剪贴板。');
         await navigator.clipboard.writeText(data.token);
-        setStatus(actionStatus, '手机配对密钥已复制，请保存到手机独立超频通知目录。', 'ok');
+        setStatus(actionStatus, '手机配对密钥已复制，请保存到 KO 侧载超频通知目录。', 'ok');
       } catch (error) { setStatus(actionStatus, error.message || '读取手机配对密钥失败。', 'error'); }
       finally { setButtonBusy(phonePairButton, false, '读取中', '复制手机配对密钥'); }
+    });
+    clearNotificationsButton?.addEventListener('click', async () => {
+      if (!window.confirm('清空手机通知和收款展示日志？')) return;
+      setButtonBusy(clearNotificationsButton, true, '清空中', '清空日志');
+      try {
+        await adminRequest('/admin/notifications/clear', jsonOptions({}));
+        setStatus(actionStatus, '通知日志已清空，捐赠订单和名单不会受影响。', 'ok');
+        await Promise.all([loadAdminData('notifications', actionStatus), loadAdminData('payments', actionStatus)]);
+      } catch (error) { setStatus(actionStatus, error.message || '通知日志清空失败。', 'error'); }
+      finally { setButtonBusy(clearNotificationsButton, false, '清空中', '清空日志'); }
     });
     loginForm.addEventListener('submit', async event => {
       event.preventDefault(); if (!loginForm.checkValidity()) { loginForm.reportValidity(); return; }
@@ -439,5 +450,5 @@
   if (page === 'register') initRegister();
   if (page === 'donate') initDonate();
   if (page === 'admin') initAdmin();
-  window.AaOverclockCloud = { request, loadCloud, state };
+  window.KOSidecarOverclockCloud = { request, loadCloud, state };
 })();

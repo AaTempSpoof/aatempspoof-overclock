@@ -1,2 +1,2 @@
-# Independent overclock API origin.
-api=https://but-publishers-transcripts-print.trycloudflare.com
+# KO sidecar overclock API origin.
+api=https://challenged-api-phrase-spirituality.trycloudflare.com

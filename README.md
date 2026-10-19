@@ -9,8 +9,8 @@
 - 捐赠页面：`donate.html`
 - 微信/支付宝收款码：`sponsor-qr.png`、`sponsor-alipay.jpg`
 - 当前 HTTPS API 入口：`cloud.txt`
-- KO侧载超频 1.0.10：`KO侧载超频_1.0.10.zip`
-- 包 SHA-256：`KO侧载超频_1.0.10.zip.sha256`
+- KO侧载超频 1.0.11：`KO侧载超频_1.0.11.zip`
+- 包 SHA-256：`KO侧载超频_1.0.11.zip.sha256`
 
 模块自动识别设备型号、SoC、内核和显示驱动，并验证主板 ID 授权、Ed25519 签名及 KO 文件 SHA-256。模块在刷入界面显示识别机型；不匹配或未授权时不会加载 KO。
 
